@@ -1,0 +1,63 @@
+#+TITLE: A Title
+#+AUTHOR: Brandon T. Willard
+#+DATE: 2019-10-16
+
+#+STARTUP: hideblocks indent hidestars
+#+OPTIONS: ^:nil toc:nil d:(not "logbook" "todo" "notes") tex:t |:t broken-links:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+
+#+PROPERTY: header-args :session blah :exports both :eval never-export :results output drawer replace
+#+PROPERTY: header-args:text :eval never
+
+#+BEGIN_SRC elisp :exports never :results silent :eval never
+;; Use this to view
+(let ((org-res (org-element-parse-buffer)))
+  (with-current-buffer (get-buffer-create "test-export-file-org.el")
+    (erase-buffer)
+    (emacs-lisp-mode)
+    (let ((print-circle nil)
+          (print-level nil))
+      (insert (prin1-to-string org-res)))
+    (srefactor-lisp-format-buffer)))
+#+END_SRC
+
+* Introduction
+
+Some opening text here.
+
+#+NAME: first-python-block
+#+BEGIN_SRC python
+print("this result shouldn't appear in the output")
+#+END_SRC
+
+A broken link [[wherever]].
+
+#+NAME: second-python-block
+#+BEGIN_SRC python :eval yes
+print("this result should appear in the output")
+#+END_SRC
+
+If code block links aren't set up, [[second-python-block][this link]] should be broken as well.
+However, since we have enabled the ~broken-links~ option, the export should
+still succeed.
+
+** A Subsection
+
+This should be rendered as *Markdown*.
+
+#+NAME: third-python-block
+#+BEGIN_SRC python :exports results :eval never
+print("this result should appear in the output")
+#+END_SRC
+
+* Another Level One Header
+
+#+NAME: fourth-python-block
+#+BEGIN_SRC python :eval never
+print("this result should not appear in the output")
+#+END_SRC
+
+* Conclusion
+
+Some closing text here.
